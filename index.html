@@ -145,6 +145,300 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/15/Gitlab-Jenkins-%E5%AE%89%E8%A3%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jeremy Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Be a professional java backend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/15/Gitlab-Jenkins-%E5%AE%89%E8%A3%85/" class="post-title-link" itemprop="url">Gitlab && Jenkins 安装</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-05-15 10:31:49" itemprop="dateCreated datePublished" datetime="2020-05-15T10:31:49+08:00">2020-05-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-23 11:02:04" itemprop="dateModified" datetime="2020-05-23T11:02:04+08:00">2020-05-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="安装GitLab"><a href="#安装GitLab" class="headerlink" title="安装GitLab"></a>安装GitLab</h2><p>传统方式安装GitLab比较麻烦，所以这里我们使用Docker安装GitLab</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> pull image</span></span><br><span class="line">docker pull gitlab/gitlab-ce:latest</span><br></pre></td></tr></table></figure>
+<p>编写启动脚本</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; run_gitlab.sh</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">docker rm  -f gitlab</span><br><span class="line">docker run -d \</span><br><span class="line">    -p 8443:443 -p 8080:80 -p 2223:22 \</span><br><span class="line">    --name gitlab \</span><br><span class="line">    -v /gitlab/config:/etc/gitlab \</span><br><span class="line">    -v /gitlab/logs:/var/log/gitlab \</span><br><span class="line">    -v /gitlab/data:/var/opt/gitlab \</span><br><span class="line">    gitlab/gitlab-ce:latest</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>执行chmod u+x run_gitlab.sh添加可执行权限，然后运行sh run_gitlab.sh启动GitLab<br>执行启动脚本后，使用docker logs -f gitlab查看启动日志，第一次启动比较慢，当日志定时输出/metrics内容时说明GitLab已启动完毕：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">==&gt; /var/log/gitlab/gitlab-rails/sidekiq_exporter.log &lt;==</span><br><span class="line">[2019-11-03T03:35:18.170+0000] 127.0.0.1 - - [03/Nov/2019:03:35:18 UTC] "GET /metrics HTTP/1.1" 200 6162 "-" "Prometheus/2.12.0"</span><br></pre></td></tr></table></figure>
+<p>启动后，修改gitlab.rb文件：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /gitlab/config/gitlab.rb</span><br><span class="line"><span class="meta">#</span><span class="bash">开启配置，修改端口号为2223</span></span><br><span class="line">gitlab_rails['gitlab_shell_ssh_port'] = 2223</span><br></pre></td></tr></table></figure>
+<p>执行sh run_gitlab.sh重启即可。</p>
+<h2 id="安装Jenkins"><a href="#安装Jenkins" class="headerlink" title="安装Jenkins"></a>安装Jenkins</h2><p>Jenkins的话，推荐用传统方式安装，这样宿主机上安装的maven、docker、git等命令可以直接使用。<br>在安装Jenkins之前,安装java环境</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">yum -y install java-1.8.0-openjdk-devel.x86_64</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#配置环境变量 vim /etc/profile， 在文件末尾加上</span></span></span><br><span class="line">export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.252.b09-2.el7_8.x86_64</span><br><span class="line">export PATH=$JAVA_HOME/bin:$PATH </span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 配置生效</span></span></span><br><span class="line">source /etc/profile</span><br><span class="line">java -version</span><br></pre></td></tr></table></figure>
+<h2 id="安装maven"><a href="#安装maven" class="headerlink" title="安装maven"></a>安装maven</h2><figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 下载安装文件</span></span><br><span class="line">  wget http://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz</span><br><span class="line"><span class="meta">#</span><span class="bash"> 解压安装：</span></span><br><span class="line">  tar -zxvf apache-maven-3.3.9-bin.tar.gz</span><br><span class="line"><span class="meta">#</span><span class="bash">vi /etc/profile</span></span><br><span class="line">  export M2_HOME=/home/jeremy/apache-maven-3.3.9 </span><br><span class="line">  export PATH=$&#123;M2_HOME&#125;/bin:$&#123;PATH&#125; </span><br><span class="line">  source /etc/profile</span><br><span class="line">  mvn -v</span><br></pre></td></tr></table></figure>
+<h2 id="安装jenkins"><a href="#安装jenkins" class="headerlink" title="安装jenkins"></a>安装jenkins</h2><figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">download jenkins</span></span><br><span class="line">wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">run jenkins</span></span><br><span class="line">nohup java -jar jenkins.war --httpPort=8081 &amp;</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/15/Centos-docker-docker-compose-install/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jeremy Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Be a professional java backend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/15/Centos-docker-docker-compose-install/" class="post-title-link" itemprop="url">Centos docker && docker-compose install</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-05-15 10:00:49" itemprop="dateCreated datePublished" datetime="2020-05-15T10:00:49+08:00">2020-05-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-23 11:02:04" itemprop="dateModified" datetime="2020-05-23T11:02:04+08:00">2020-05-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="docker-install"><a href="#docker-install" class="headerlink" title="docker install"></a>docker install</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"># 更新到最新 yum 包</span><br><span class="line">yum update -y</span><br><span class="line"></span><br><span class="line"># 卸载旧版本（如果安装过旧版本的话）</span><br><span class="line">yum remove docker docker-common docker-selinux docker-engine docer-io</span><br><span class="line"></span><br><span class="line"># 安装需要的软件包</span><br><span class="line"># yum-util 提供 yum-config-manager 功能， 另外两个是 devicemapper 驱动依赖</span><br><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line"></span><br><span class="line"># 设置 yum 源</span><br><span class="line">yum-config-manager --add-repo https:&#x2F;&#x2F;download.docker.com&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo</span><br><span class="line"></span><br><span class="line"># 查看所有仓库中所有 docker 版本，并选择特定版本安装</span><br><span class="line">yum list docker-ce --showduplicates | sort -r</span><br><span class="line"></span><br><span class="line"># 由于 repo 中默认只开启 stable 的仓库，故这里安装的是最新稳定版（18.09.2）</span><br><span class="line"># 由于内核是 3.10 无法正常运行 18.06.x 及以上版本的 docker，所以不这么安装</span><br><span class="line"># yum install -y docker-ce</span><br><span class="line"></span><br><span class="line"># 经过测试发现，3.10 内核可以运行 18.03.1.ce</span><br><span class="line"># yum install -y &lt;FQPN&gt;</span><br><span class="line">yum install -y docker-ce-18.03.1.ce</span><br><span class="line"></span><br><span class="line"># 启动并加入开机启动</span><br><span class="line">systemctl start docker</span><br><span class="line">systemctl enable docker</span><br><span class="line"></span><br><span class="line"># 验证安装是否成功（有 client 和 service 两部分表示 docker 安装启动都成功了）</span><br><span class="line">docker version</span><br></pre></td></tr></table></figure>
+
+<h3 id="Aliyun-docker-image-config"><a href="#Aliyun-docker-image-config" class="headerlink" title="Aliyun docker image config"></a>Aliyun docker image config</h3><figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-'EOF'</span><br><span class="line">&#123;</span><br><span class="line">  "registry-mirrors": [</span><br><span class="line">         "https://c25je5g1.mirror.aliyuncs.com",</span><br><span class="line">         "https://dockerhub.azk8s.cn",</span><br><span class="line">         "https://reg-mirror.qiniu.com",</span><br><span class="line">         "https://registry.docker-cn.com"</span><br><span class="line">   ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="docker-compose-install"><a href="#docker-compose-install" class="headerlink" title="docker-compose install"></a>docker-compose install</h3><figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 下载最新版本的 docker-compose 到 /usr/bin 目录下</span></span><br><span class="line">curl -L https://github.com/docker/compose/releases/download/1.23.2/docker-compose-`uname -s`-`uname -m` -o /usr/bin/docker-compose</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 给 docker-compose 授权</span></span><br><span class="line">chmod +x /usr/bin/docker-compose</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/13/Jenkins-File/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jeremy Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Be a professional java backend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/13/Jenkins-File/" class="post-title-link" itemprop="url">Jenkins File</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-05-13 09:48:49" itemprop="dateCreated datePublished" datetime="2020-05-13T09:48:49+08:00">2020-05-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-23 11:02:04" itemprop="dateModified" datetime="2020-05-23T11:02:04+08:00">2020-05-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">image_tag = "default"  //定一个全局变量，存储Docker镜像的tag（版本）</span><br><span class="line">pipeline &#123;</span><br><span class="line">    agent any</span><br><span class="line">    environment &#123;</span><br><span class="line">        GIT_REPO = "$&#123;env.gitlabSourceRepoName&#125;"  //从Jenkins Gitlab插件中获取Git项目的名称</span><br><span class="line">        GIT_BRANCH = "$&#123;env.gitlabTargetBranch&#125;"  //项目的分支</span><br><span class="line">        GIT_TAG = sh(returnStdout: true,script: 'git describe --tags --always').trim()  //commit id或tag名称</span><br><span class="line">        DOCKER_REGISTER_CREDS = credentials('aliyun-docker-repo-creds') //docker registry凭证</span><br><span class="line">        KUBE_CONFIG_LOCAL = credentials('local-k8s-kube-config')  //开发测试环境的kube凭证</span><br><span class="line">        KUBE_CONFIG_PROD = "" //credentials('prod-k8s-kube-config') //生产环境的kube凭证</span><br><span class="line"></span><br><span class="line">        DOCKER_REGISTRY = "registry.cn-hangzhou.aliyuncs.com" //Docker仓库地址</span><br><span class="line">        DOCKER_NAMESPACE = "your-namespace"  //命名空间</span><br><span class="line">        DOCKER_IMAGE = "$&#123;DOCKER_REGISTRY&#125;/$&#123;DOCKER_NAMESPACE&#125;/$&#123;GIT_REPO&#125;" //Docker镜像地址</span><br><span class="line"></span><br><span class="line">        INGRESS_HOST_DEV = "dev.your-site.com"    //开发环境的域名</span><br><span class="line">        INGRESS_HOST_TEST = "test.your-site.com"  //测试环境的域名</span><br><span class="line">        INGRESS_HOST_PROD = "prod.your-site.com"  //生产环境的域名</span><br><span class="line">    &#125;</span><br><span class="line">    parameters &#123;</span><br><span class="line">        string(name: 'ingress_path', defaultValue: '/your-path', description: '服务上下文路径')</span><br><span class="line">        string(name: 'replica_count', defaultValue: '1', description: '容器副本数量')</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stages &#123;</span><br><span class="line">        stage('Code Analyze') &#123;</span><br><span class="line">            agent any</span><br><span class="line">            steps &#123;</span><br><span class="line">               echo "1. 代码静态检查"</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage('Maven Build') &#123;</span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123;</span><br><span class="line">                    image 'maven:3-jdk-8-alpine'</span><br><span class="line">                    args '-v $HOME/.m2:/root/.m2'</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo "2. 代码编译打包"</span><br><span class="line">                sh 'mvn clean package -Dfile.encoding=UTF-8 -DskipTests=true'</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage('Docker Build') &#123;</span><br><span class="line">            agent any</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo "3. 构建Docker镜像"</span><br><span class="line">                echo "镜像地址： $&#123;DOCKER_IMAGE&#125;"</span><br><span class="line">                //登录Docker仓库</span><br><span class="line">                sh "sudo docker login -u $&#123;DOCKER_REGISTER_CREDS_USR&#125; -p $&#123;DOCKER_REGISTER_CREDS_PSW&#125; $&#123;DOCKER_REGISTRY&#125;"</span><br><span class="line">                script &#123;</span><br><span class="line">                    def profile = "dev"</span><br><span class="line">                    if (env.gitlabTargetBranch == "develop") &#123;</span><br><span class="line">                        image_tag = "dev." + env.GIT_TAG</span><br><span class="line">                    &#125; else if (env.gitlabTargetBranch == "pre-release") &#123;</span><br><span class="line">                        image_tag = "test." + env.GIT_TAG</span><br><span class="line">                        profile = "test"</span><br><span class="line">                    &#125; else if (env.gitlabTargetBranch == "master")&#123;</span><br><span class="line">                        // master分支则直接使用Tag</span><br><span class="line">                        image_tag = env.GIT_TAG</span><br><span class="line">                        profile = "prod"</span><br><span class="line">                    &#125;</span><br><span class="line">                    //通过--build-arg将profile进行设置，以区分不同环境进行镜像构建</span><br><span class="line">                    sh "docker build  --build-arg profile=$&#123;profile&#125; -t $&#123;DOCKER_IMAGE&#125;:$&#123;image_tag&#125; ."</span><br><span class="line">                    sh "sudo docker push $&#123;DOCKER_IMAGE&#125;:$&#123;image_tag&#125;"</span><br><span class="line">                    sh "docker rmi $&#123;DOCKER_IMAGE&#125;:$&#123;image_tag&#125;"</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage('Helm Deploy') &#123;</span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123;</span><br><span class="line">                    image 'lwolf/helm-kubectl-docker'</span><br><span class="line">                    args '-u root:root'</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo "4. 部署到K8s"</span><br><span class="line">                sh "mkdir -p /root/.kube"</span><br><span class="line">                script &#123;</span><br><span class="line">                    def kube_config = env.KUBE_CONFIG_LOCAL</span><br><span class="line">                    def ingress_host = env.INGRESS_HOST_DEV</span><br><span class="line">                    if (env.gitlabTargetBranch == "pre-release") &#123;</span><br><span class="line">                        ingress_host = env.INGRESS_HOST_TEST</span><br><span class="line">                    &#125; else if (env.gitlabTargetBranch == "master")&#123;</span><br><span class="line">                        ingress_host = env.INGRESS_HOST_PROD</span><br><span class="line">                        kube_config = env.KUBE_CONFIG_PROD</span><br><span class="line">                    &#125;</span><br><span class="line">                    sh "echo $&#123;kube_config&#125; | base64 -d &gt; /root/.kube/config"</span><br><span class="line">                    //根据不同环境将服务部署到不同的namespace下，这里使用分支名称</span><br><span class="line">                    sh "helm upgrade -i --namespace=$&#123;env.gitlabTargetBranch&#125; --set replicaCount=$&#123;params.replica_count&#125; --set image.repository=$&#123;DOCKER_IMAGE&#125; --set image.tag=$&#123;image_tag&#125; --set nameOverride=$&#123;GIT_REPO&#125; --set ingress.hosts[0].host=$&#123;ingress_host&#125; --set ingress.hosts[0].paths=&#123;$&#123;params.ingress_path&#125;&#125; $&#123;GIT_REPO&#125; ./helm/"</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/12/ECS-FARGATE-DEPLOYMENT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jeremy Chou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Be a professional java backend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/12/ECS-FARGATE-DEPLOYMENT/" class="post-title-link" itemprop="url">ECS-FARGATE-DEPLOYMENT</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-05-12 11:08:39" itemprop="dateCreated datePublished" datetime="2020-05-12T11:08:39+08:00">2020-05-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-23 11:02:04" itemprop="dateModified" datetime="2020-05-23T11:02:04+08:00">2020-05-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="create-ecs-cluster"><a href="#create-ecs-cluster" class="headerlink" title="create ecs cluster"></a>create ecs cluster</h2>   <figure class="highlight shell"><figcaption><span>script </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ecs-cli configure -c $&#123;clustername&#125; -r us-east-1  --default-launch-type FARGATE</span><br><span class="line">ecs-cli up -e</span><br></pre></td></tr></table></figure>
+<h2 id="tag-the-resource"><a href="#tag-the-resource" class="headerlink" title="tag the resource"></a>tag the resource</h2>   <figure class="highlight shell"><figcaption><span>script </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aws ecs tag-resource --resource-arn resource_ARN --tags key=stack,value=dev</span><br></pre></td></tr></table></figure>
+<h2 id="start-or-up-ecs"><a href="#start-or-up-ecs" class="headerlink" title="start or up ecs"></a>start or up ecs</h2>   <figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ecs-cli compose -f %dockerComposeFile% --ecs-params %ecsParamsFile% -p %ProjectName% service start </span><br><span class="line">ecs-cli compose -f %dockerComposeFile% --ecs-params %ecsParamsFile% -p %ProjectName% service start --force-deployment</span><br><span class="line">ecs-cli compose -f %dockerComposeFile% --ecs-params %ecsParamsFile% -p %ProjectName% service up --launch-type FARGATE --create-log-groups</span><br></pre></td></tr></table></figure>
+<h2 id="check-status"><a href="#check-status" class="headerlink" title="check status"></a>check status</h2>   <figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ecs-cli compose -f %dockerComposeFile% --ecs-params %ecsParamsFile% -p %ProjectName% service ps</span><br></pre></td></tr></table></figure>
+<h2 id="stop-or-down-esc"><a href="#stop-or-down-esc" class="headerlink" title="stop or down esc"></a>stop or down esc</h2>   <figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ecs-cli compose -f %dockerComposeFile% --ecs-params %ecsParamsFile% -p %ProjectName% service stop  </span><br><span class="line">ecs-cli compose -f %dockerComposeFile% --ecs-params %ecsParamsFile% -p %ProjectName% service down</span><br></pre></td></tr></table></figure>
+<h2 id="check-logs"><a href="#check-logs" class="headerlink" title="check logs"></a>check logs</h2><ul>
+<li>list cluster task info <figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aws ecs list-tasks --cluster  $&#123;clustername&#125;</span><br></pre></td></tr></table></figure></li>
+<li>check container logs<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ecs-cli logs  -c #&#123;clustername&#125; --container-name $&#123;containerName&#125; --task-id  %taskId% --since %minutes% -t</span><br></pre></td></tr></table></figure>
+<h2 id="config-files"><a href="#config-files" class="headerlink" title="config files"></a>config files</h2></li>
+<li>docker-compose.yml   <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">a20617-poc-demo-flowable-ee-service:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="number">608014515287.</span><span class="string">dkr.ecr.us-east-1.amazonaws.com/a206171-ds2-poc-flowable-ee:3.6.0.32</span></span><br><span class="line">    <span class="attr">labels:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">'flowable'</span></span><br><span class="line">    <span class="attr">logging:</span></span><br><span class="line">      <span class="attr">driver:</span> <span class="string">awslogs</span></span><br><span class="line">      <span class="attr">options:</span></span><br><span class="line">        <span class="attr">awslogs-group:</span> <span class="string">/ecs/a20617-poc-demo-flowable-ee-service</span></span><br><span class="line">        <span class="attr">awslogs-region:</span> <span class="string">us-east-1</span></span><br><span class="line">        <span class="attr">awslogs-stream-prefix:</span> <span class="string">ecs</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">'8080:8080'</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">'9200:9200'</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">flowablelib:/opt/flowable/tomcat/webapps/flowable-engage/WEB-INF/lib</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_URL=jdbc:h2:tcp://a20617-flowable-ee-demo-db.fr-nonprod.aws.thomsonreuters.com:1521/test;TRACE_LEVEL_FILE=0;DB_CLOSE_ON_EXIT=FALSE</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_USERNAME=sa</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_PASSWORD=sa</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ES_URL=http://a20617-flowable-ee-demo-db.fr-nonprod.aws.thomsonreuters.com:9200</span></span><br><span class="line">  <span class="attr">a20617-poc-demo-flowable-jars-service:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="number">608014515287.</span><span class="string">dkr.ecr.us-east-1.amazonaws.com/a206171-ds2-poc-flowable-jars:latest</span></span><br><span class="line">    <span class="attr">labels:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">'flowablejars'</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">flowablelib:/opt/flowable/tomcat/webapps/flowable-engage/WEB-INF/lib</span></span><br><span class="line">    <span class="attr">logging:</span></span><br><span class="line">      <span class="attr">driver:</span> <span class="string">awslogs</span></span><br><span class="line">      <span class="attr">options:</span></span><br><span class="line">        <span class="attr">awslogs-group:</span> <span class="string">/ecs/a20617-poc-demo-flowable-jars-service</span></span><br><span class="line">        <span class="attr">awslogs-region:</span> <span class="string">us-east-1</span></span><br><span class="line">        <span class="attr">awslogs-stream-prefix:</span> <span class="string">ecs</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">flowablelib:</span></span><br></pre></td></tr></table></figure></li>
+<li>ecs-params.yml  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">task_definition:</span></span><br><span class="line">  <span class="attr">ecs_network_mode:</span> <span class="string">awsvpc</span></span><br><span class="line">  <span class="attr">task_role_arn:</span> <span class="string">arn:aws:iam::608014515287:role/206171-ecat-poc-camunda-ecsTaskExecuteRole</span></span><br><span class="line">  <span class="attr">task_execution_role:</span> <span class="string">arn:aws:iam::608014515287:role/ecsTaskExecutionRole</span></span><br><span class="line">  <span class="attr">task_size:</span></span><br><span class="line">    <span class="attr">cpu_limit:</span> <span class="number">2048</span></span><br><span class="line">    <span class="attr">mem_limit:</span> <span class="string">4GB</span></span><br><span class="line">  <span class="attr">services:</span></span><br><span class="line">    <span class="attr">a20617-poc-demo-flowable-ee-service:</span></span><br><span class="line">      <span class="attr">essential:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">cpu_shares:</span> <span class="number">1536</span></span><br><span class="line">      <span class="attr">mem_limit:</span> <span class="string">3GB</span></span><br><span class="line">    <span class="attr">a20617-poc-demo-flowable-jars-service:</span></span><br><span class="line">      <span class="attr">essential:</span> <span class="literal">false</span></span><br><span class="line">      <span class="attr">cpu_shares:</span> <span class="number">512</span></span><br><span class="line">      <span class="attr">mem_limit:</span> <span class="string">1GB</span></span><br><span class="line">  <span class="attr">docker_volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">flowablelib</span></span><br><span class="line">      <span class="attr">scope:</span> <span class="string">task</span></span><br><span class="line"><span class="attr">run_params:</span></span><br><span class="line">  <span class="attr">network_configuration:</span></span><br><span class="line">    <span class="attr">awsvpc_configuration:</span></span><br><span class="line">      <span class="attr">subnets:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">subnet-23b5866a</span></span><br><span class="line">      <span class="attr">security_groups:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">sg-010f859f1a7b1506c</span></span><br><span class="line">      <span class="attr">assign_public_ip:</span> <span class="string">ENABLED</span></span><br></pre></td></tr></table></figure></li>
+<li>deploy.bat<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br></pre></td><td class="code"><pre><span class="line">@echo off</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> lanuchType=FARGATE</span><br><span class="line"><span class="keyword">set</span> currentEnv=dev</span><br><span class="line"></span><br><span class="line">if ""%1"" == ""demo"" (</span><br><span class="line">  <span class="keyword">set</span> currentEnv=demo</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> defaultProjectName=a206171-flowable-ee-%currentEnv%-taskdef</span><br><span class="line"><span class="keyword">set</span> defaultDBProjectName=a206171-flowable-ee-%currentEnv%-h2db</span><br><span class="line"><span class="keyword">set</span> defaultClusterName=a206171-flowable-ee-%currentEnv%-cluster</span><br><span class="line"><span class="keyword">set</span> dockerComposeFile=docker-compose-%currentEnv%.yml</span><br><span class="line"><span class="keyword">set</span> ecsParamsFile=ecs-params-%currentEnv%.yml</span><br><span class="line"><span class="keyword">set</span> dbDockerComposeFile=db-docker-compose-%currentEnv%.yml</span><br><span class="line"><span class="keyword">set</span> dbEcsParamsFile=db-ecs-params-%currentEnv%.yml</span><br><span class="line"></span><br><span class="line">echo defaultProjectName: %defaultProjectName%</span><br><span class="line">echo defaultDBProjectName: %defaultDBProjectName%</span><br><span class="line">echo defaultClusterName: %defaultClusterName%</span><br><span class="line">echo dockerComposeFile: %dockerComposeFile%</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> bpmComposeSericeCommand=ecs-cli compose -f %dockerComposeFile% --ecs-params %ecsParamsFile% -p %defaultProjectName% service</span><br><span class="line"><span class="keyword">set</span> dbComposeServiceCommad=ecs-cli compose -f %dbDockerComposeFile% --ecs-params %dbEcsParamsFile% -p %defaultDBProjectName%  service</span><br><span class="line"></span><br><span class="line">rem current do not support EC2</span><br><span class="line">if ""%2"" == ""EC2"" (</span><br><span class="line">  <span class="keyword">set</span> lanuchType=EC2</span><br><span class="line">)</span><br><span class="line">if ""%3"" == ""EC2"" (</span><br><span class="line">  <span class="keyword">set</span> lanuchType=EC2</span><br><span class="line">)</span><br><span class="line">if ""%4"" == ""EC2"" (</span><br><span class="line">  <span class="keyword">set</span> lanuchType=EC2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">echo ecs-cli configure -c %defaultClusterName% -r us-east-1 --default-launch-type %lanuchType%</span><br><span class="line">ecs-cli configure -c %defaultClusterName% -r us-east-1 --default-launch-type %lanuchType%</span><br><span class="line"></span><br><span class="line">if ""%2"" == ""up"" goto doUp</span><br><span class="line">if ""%2"" == ""down"" goto doDown</span><br><span class="line">if ""%2"" == ""status"" goto doStatus</span><br><span class="line">if ""%2"" == ""ps"" goto doStatus</span><br><span class="line">if ""%2"" == ""stop"" goto doStop</span><br><span class="line">if ""%2"" == ""start"" goto doStart</span><br><span class="line"></span><br><span class="line">if ""%2"" == ""db"" (</span><br><span class="line">    if ""%3"" == ""up"" (</span><br><span class="line">      goto doH2Up</span><br><span class="line">    )</span><br><span class="line">    if ""%3"" == ""down"" (</span><br><span class="line">      goto doH2Down</span><br><span class="line">    )</span><br><span class="line">    if ""%3"" == ""status"" (</span><br><span class="line">      goto doH2Status</span><br><span class="line">    )</span><br><span class="line">    if ""%3"" == ""ps"" (</span><br><span class="line">      goto doH2Status</span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line">goto doUsage</span><br><span class="line"></span><br><span class="line">:doUsage</span><br><span class="line">echo Usage:  deploy [env] ( commands ... )</span><br><span class="line">echo commands:</span><br><span class="line">echo   up                Service up in the AWS cloud</span><br><span class="line">echo   down              Down the running service in the AWS cloud, and also delete the service</span><br><span class="line">echo   status, ps        Check the task status for flowable in AWS</span><br><span class="line">echo   start             Starts one copy of each of the containers on an existing ECS service by setting the desired count to 1 (only if the current desired count is 0)</span><br><span class="line">echo   stop              Stops the running tasks that belong to the service created with the compose project. This command updates the desired count of the service to 0.</span><br><span class="line">echo   db up             Up run a h2 db, notice that after run a h2 db, need change the ip address in docker-compose.yml</span><br><span class="line">echo   db down           Down a h2 db instance</span><br><span class="line">echo   db status, ps     Check h2 db status</span><br><span class="line">goto end</span><br><span class="line"></span><br><span class="line">:doStart</span><br><span class="line">if ""%1"" == ""--force"" goto doForceStart</span><br><span class="line">goto doNormalStart</span><br><span class="line"></span><br><span class="line">:doNormalStart</span><br><span class="line">echo %bpmComposeSericeCommand% start</span><br><span class="line">%bpmComposeSericeCommand% start</span><br><span class="line">goto doStatus</span><br><span class="line"></span><br><span class="line">:doForceStart</span><br><span class="line">echo %bpmComposeSericeCommand% start --force-deployment</span><br><span class="line">%bpmComposeSericeCommand% start --force-deployment</span><br><span class="line">goto doStatus</span><br><span class="line"></span><br><span class="line">:doStop</span><br><span class="line">echo %bpmComposeSericeCommand% stop</span><br><span class="line">%bpmComposeSericeCommand% stop</span><br><span class="line">goto doStatus</span><br><span class="line"></span><br><span class="line">:doUp</span><br><span class="line">echo up command is danger, it will recreate the service and all data will lost</span><br><span class="line"><span class="keyword">set</span> upContinue=n</span><br><span class="line"><span class="keyword">set</span> /p upContinue=n continue to recreate ECS service [y/n] (default - %upContinue%)?:</span><br><span class="line">if ""%upContinue%"" == ""n"" goto end</span><br><span class="line">echo %bpmComposeSericeCommand% up --launch-type %lanuchType% --create-log-groups</span><br><span class="line">%bpmComposeSericeCommand% up --launch-type %lanuchType% --create-log-groups</span><br><span class="line">goto doStatus</span><br><span class="line"></span><br><span class="line">:doDown</span><br><span class="line">echo %bpmComposeSericeCommand% down</span><br><span class="line">%bpmComposeSericeCommand% down</span><br><span class="line">goto doStatus</span><br><span class="line"></span><br><span class="line">:doStatus</span><br><span class="line">echo %bpmComposeSericeCommand% ps</span><br><span class="line">%bpmComposeSericeCommand% ps</span><br><span class="line">goto end</span><br><span class="line"></span><br><span class="line">:doH2Up</span><br><span class="line">echo up command is danger, it will recreate the service and all data will lost</span><br><span class="line"><span class="keyword">set</span> upContinue=n</span><br><span class="line"><span class="keyword">set</span> /p upContinue=n continue to recreate ECS service [y/n] (default - %upContinue%)?:</span><br><span class="line">if ""%upContinue%"" == ""n"" goto end</span><br><span class="line">echo %dbComposeServiceCommad% up --launch-type %lanuchType% --create-log-groups</span><br><span class="line">%dbComposeServiceCommad% up --launch-type %lanuchType% --create-log-groups</span><br><span class="line">goto doH2Status</span><br><span class="line"></span><br><span class="line">:doH2Down</span><br><span class="line">echo down command is danger, it will recreate the service and all data will be lost</span><br><span class="line"><span class="keyword">set</span> downContinue=n</span><br><span class="line"><span class="keyword">set</span> /p downContinue=n continue to recreate ECS service [y/n] (default - %downContinue%)?:</span><br><span class="line">if ""%downContinue%"" == ""n"" goto end</span><br><span class="line">%dbComposeServiceCommad% down</span><br><span class="line">%dbComposeServiceCommad% down</span><br><span class="line">goto doH2Status</span><br><span class="line"></span><br><span class="line">:doH2Status</span><br><span class="line">echo %dbComposeServiceCommad% ps</span><br><span class="line">%dbComposeServiceCommad% ps</span><br><span class="line"></span><br><span class="line">:end</span><br></pre></td></tr></table></figure></li>
+<li>log.bat<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">@echo off</span><br><span class="line">set currentEnv=dev</span><br><span class="line">set minutes=2</span><br><span class="line"></span><br><span class="line">if ""%1"" == ""demo"" (</span><br><span class="line">  set currentEnv=demo</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">if NOT ""%2"" == """" (</span><br><span class="line">  set taskId=%2</span><br><span class="line">  echo taskId=%taskId%</span><br><span class="line">  goto doLog</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">if ""%2"" == """" (</span><br><span class="line">  echo aws ecs list-tasks --cluster a206171-flowable-ee-%currentEnv%-cluster</span><br><span class="line">  aws ecs list-tasks --cluster a206171-flowable-ee-%currentEnv%-cluster</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">:doUsage</span><br><span class="line">echo Usage:  log [env] [taskid] [minutes]</span><br><span class="line">goto end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">:doLog</span><br><span class="line">if NOT ""%3"" == """" (</span><br><span class="line">  set minutes=%3</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">if ""%4"" == """" (</span><br><span class="line">  echo ecs-cli logs -c a206171-flowable-ee-%currentEnv%-cluster --container-name a20617-poc-%currentEnv%-flowable-ee-service  --task-id  %taskId% --since %minutes% -t</span><br><span class="line">  ecs-cli logs  -c a206171-flowable-ee-%currentEnv%-cluster --container-name a20617-poc-%currentEnv%-flowable-ee-service  --task-id  %taskId% --since %minutes% -t</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">if ""%4"" == ""jars"" (</span><br><span class="line">  echo ecs-cli logs -c a206171-flowable-ee-%currentEnv%-cluster --container-name a20617-poc-%currentEnv%-flowable-jars-service  --task-id  %taskId% --since %minutes% -t</span><br><span class="line">  ecs-cli logs  -c a206171-flowable-ee-%currentEnv%-cluster --container-name a20617-poc-%currentEnv%-flowable-jars-service  --task-id  %taskId% --since %minutes% -t</span><br><span class="line">)</span><br><span class="line">goto end</span><br><span class="line"></span><br><span class="line">:end</span><br></pre></td></tr></table></figure>
+<h2 id="link-for-reference"><a href="#link-for-reference" class="headerlink" title="link for reference"></a>link for reference</h2><ul>
+<li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_reference.html" target="_blank" rel="noopener">Amazon ECS Command Line Reference</a></li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/20/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -499,7 +793,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-20 23:01:18" itemprop="dateModified" datetime="2020-03-20T23:01:18+08:00">2020-03-20</time>
+                <time title="Modified: 2020-05-23 11:02:04" itemprop="dateModified" datetime="2020-05-23T11:02:04+08:00">2020-05-23</time>
               </span>
 
           
@@ -517,11 +811,12 @@
 <li>prepare docker file,package and build image<ul>
 <li>Dockerfile<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FROM openjdk:<span class="number">8</span>-jdk-alpine</span><br><span class="line">ARG JAR_FILE=target/$&#123;build-final-name&#125;-$&#123;build-version&#125;-SNAPSHOT.jar</span><br><span class="line">COPY $&#123;JAR_FILE&#125; app.jar</span><br><span class="line">ENTRYPOINT [<span class="string">"sh"</span>,<span class="string">"-c"</span>,<span class="string">" java -jar app.jar "</span>]</span><br></pre></td></tr></table></figure></li>
 <li>build package<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean package</span><br></pre></td></tr></table></figure></li>
-<li>build image<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build -t a206171-ecat-workflow-entitytransformer .</span><br><span class="line">docker tag a206171-ecat-workflow-entitytransformer:latest <span class="number">608014515287.</span>dkr.ecr.us-east<span class="number">-1.</span>amazonaws.com/a206171-ecat-workflow-entitytransformer:latest</span><br></pre></td></tr></table></figure></li>
+<li>build image<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build -t #&#123;imageName&#125; .</span><br><span class="line">docker tag #&#123;imageName&#125;:#&#123;version&#125; #&#123;imageName&#125;:#&#123;version&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
-<li>aws login to generate token with cloud-tool-fr  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">    cloud-tool-fr --region us-east<span class="number">-1</span> --profile <span class="keyword">default</span> login --account-id <span class="string">"608014515287"</span> --role <span class="string">"human-role/200016-PowerUser"</span> --username <span class="string">"MGMT\MC267998"</span> --password <span class="string">"rU3X96CwgSyqs6Yr"</span></span><br><span class="line">* login <span class="keyword">in</span>  ECR and push image</span><br><span class="line">   <span class="string">``</span><span class="string">`javascript</span></span><br><span class="line"><span class="string">      aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 608014515287.dkr.ecr.us-east-1.amazonaws.com/a206171-ecat-workflow-entitytransformer</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">      docker push 608014515287.dkr.ecr.us-east-1.amazonaws.com/a206171-ecat-workflow-entitytransformer:latest</span></span><br></pre></td></tr></table></figure></li>
-<li>restart ECS<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aws ecs update-service --cluster a206171-ecat-workflow-entitytransformer-cluster --service a206171-ecat-workflow-entitytransformer-service --force-<span class="keyword">new</span>-deployment</span><br></pre></td></tr></table></figure></li>
+<li>aws login to generate token with cloud-tool-fr  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cloud-tool-fr --region us-east<span class="number">-1</span> --profile <span class="keyword">default</span> login --account-id <span class="string">"accountId"</span> --role <span class="string">"aws role"</span> --username <span class="string">"username"</span> --password <span class="string">"password"</span></span><br></pre></td></tr></table></figure></li>
+<li>login in  ECR and push image<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin #&#123;registryAddr&#125;/#&#123;imageName&#125;</span><br><span class="line">docker push #&#123;registryAddr&#125;/#&#123;imageName&#125;:#&#123;version&#125;</span><br></pre></td></tr></table></figure></li>
+<li>restart ECS<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aws ecs update-service --cluster #&#123;imageName&#125;-cluster --service #&#123;imageName&#125;-service --force-new-deployment</span><br></pre></td></tr></table></figure></li>
 </ul>
 
       
@@ -1278,12 +1573,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
