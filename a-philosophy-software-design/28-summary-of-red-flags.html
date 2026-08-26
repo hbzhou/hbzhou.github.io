@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="About the AuthorJohn Ousterhout is the Bosack Lerner Professor of Computer Science at Stanford University. He is the creator of the Tcl scripting language and is also well known for his work in distri">
+    <meta name="description" content="Summary of Red FlagsHere are a few of of the most important red flags discussed in this book. The presence of any of these symptoms in a system suggests that there is a problem with the system’s desig">
 <meta property="og:type" content="website">
-<meta property="og:title" content="About the Author">
-<meta property="og:url" content="http://yoursite.com/professional-software-design/29-about-the-author.html">
+<meta property="og:title" content="Summary of Red Flags">
+<meta property="og:url" content="http://yoursite.com/a-philosophy-software-design/28-summary-of-red-flags.html">
 <meta property="og:site_name" content="Be a professional java backend">
-<meta property="og:description" content="About the AuthorJohn Ousterhout is the Bosack Lerner Professor of Computer Science at Stanford University. He is the creator of the Tcl scripting language and is also well known for his work in distri">
+<meta property="og:description" content="Summary of Red FlagsHere are a few of of the most important red flags discussed in this book. The presence of any of these symptoms in a system suggests that there is a problem with the system’s desig">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-08-26T14:12:04.262Z">
 <meta property="article:modified_time" content="2026-08-26T14:12:04.262Z">
@@ -33,13 +33,13 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://yoursite.com/professional-software-design/29-about-the-author">
+<link rel="canonical" href="http://yoursite.com/a-philosophy-software-design/28-summary-of-red-flags">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":true,"permalink":"http://yoursite.com/professional-software-design/29-about-the-author.html","path":"professional-software-design/29-about-the-author.html","title":"About the Author"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":true,"permalink":"http://yoursite.com/a-philosophy-software-design/28-summary-of-red-flags.html","path":"a-philosophy-software-design/28-summary-of-red-flags.html","title":"Summary of Red Flags"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>About the Author | Be a professional java backend
+<title>Summary of Red Flags | Be a professional java backend
 </title>
   
 
@@ -128,7 +128,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#About-the-Author"><span class="nav-number">1.</span> <span class="nav-text">About the Author</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary-of-Red-Flags"><span class="nav-number">1.</span> <span class="nav-text">Summary of Red Flags</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -171,7 +171,7 @@
     
     <div class="post-block" lang="en"><header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">About the Author
+<h1 class="post-title" itemprop="name headline">Summary of Red Flags
 </h1>
 
 <div class="post-meta-container">
@@ -183,8 +183,20 @@
       
       
       <div class="post-body">
-          <h2 id="About-the-Author"><a href="#About-the-Author" class="headerlink" title="About the Author"></a>About the Author</h2><p>John Ousterhout is the Bosack Lerner Professor of Computer Science at Stanford University. He is the creator of the Tcl scripting language and is also well known for his work in distributed operating systems and storage systems. Ousterhout received a BS degree in Physics from Yale University and a PhD in Computer Science from Carnegie Mellon University. He is a member of the National Academy of Engineering and has received numerous awards, including the ACM Software System Award, the ACM Grace Murray Hopper Award, the National Science Foundation Presidential Young Investigator Award, and the U.C.</p>
-<p>Berkeley Distinguished Teaching Award.</p>
+          <h2 id="Summary-of-Red-Flags"><a href="#Summary-of-Red-Flags" class="headerlink" title="Summary of Red Flags"></a>Summary of Red Flags</h2><p>Here are a few of of the most important red flags discussed in this book. The presence of any of these symptoms in a system suggests that there is a problem with the system’s design: Shallow Module: the interface for a class or method isn’t much simpler than its implementation (see pp. 25, 110).</p>
+<p>Information Leakage: a design decision is reflected in multiple modules (see p. 31).</p>
+<p>Temporal Decomposition: the code structure is based on the order in which operations are executed, not on information hiding (see p. 32).</p>
+<p>Overexposure: An API forces callers to be aware of rarely used features in order to use commonly used features (see p. 36).</p>
+<p>Pass-Through Method: a method does almost nothing except pass its arguments to another method with a similar signature (see p. 46).</p>
+<p>Repetition: a nontrivial piece of code is repeated over and over (see p. 62).</p>
+<p>Special-General Mixture: special-purpose code is not cleanly separated from general purpose code (see p. 65).</p>
+<p>Conjoined Methods: two methods have so many dependencies that its hard to understand the implementation of one without understanding the implementation of the other (see p. 72).</p>
+<p>Comment Repeats Code: all of the information in a comment is immediately obvious from the code next to the comment (see p. 104).</p>
+<p>Implementation Documentation Contaminates Interface: an interface comment describes implementation details not needed by users of the thing being documented (see p. 114).</p>
+<p>Vague Name: the name of a variable or method is so imprecise that it doesn’t convey much useful information (see p. 123).</p>
+<p>Hard to Pick Name: it is difficult to come up with a precise and intuitive name for an entity (see p. 125).</p>
+<p>Hard to Describe: in order to be complete, the documentation for a variable or method must be long. (see p. 131).</p>
+<p>Nonobvious Code: the behavior or meaning of a piece of code cannot be understood easily. (see p. 148).</p>
 
       </div>
       
