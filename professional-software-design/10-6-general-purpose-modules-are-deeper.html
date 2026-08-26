@@ -1,13 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-  
-  <title>6 General-Purpose Modules are Deeper | Be a professional java backend</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Chapter 6General-Purpose Modules are Deeper One of the most common decisions that you will face when designing a new module is whether to implement it in a general-purpose or special-purpose fashion.">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Chapter 6General-Purpose Modules are Deeper One of the most common decisions that you will face when designing a new module is whether to implement it in a general-purpose or special-purpose fashion.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="6 General-Purpose Modules are Deeper">
 <meta property="og:url" content="http://yoursite.com/professional-software-design/10-6-general-purpose-modules-are-deeper.html">
@@ -18,77 +31,159 @@
 <meta property="article:modified_time" content="2026-08-26T14:12:04.254Z">
 <meta property="article:author" content="Jeremy Chou">
 <meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Be a professional java backend" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
 
-<meta name="generator" content="Hexo 8.1.2"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Be a professional java backend</a>
-      </h1>
-      
+<link rel="canonical" href="http://yoursite.com/professional-software-design/10-6-general-purpose-modules-are-deeper">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":true,"permalink":"http://yoursite.com/professional-software-design/10-6-general-purpose-modules-are-deeper.html","path":"professional-software-design/10-6-general-purpose-modules-are-deeper.html","title":"6 General-Purpose Modules are Deeper"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>6 General-Purpose Modules are Deeper | Be a professional java backend
+</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Be a professional java backend</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">Tags</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section">About</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
         
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-6"><span class="nav-number">1.</span> <span class="nav-text">Chapter 6</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-Make-classes-somewhat-general-purpose"><span class="nav-number">1.1.</span> <span class="nav-text">6.1 Make classes somewhat general-purpose</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-Example-storing-text-for-an-editor"><span class="nav-number">1.2.</span> <span class="nav-text">6.2 Example: storing text for an editor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-A-more-general-purpose-API"><span class="nav-number">1.3.</span> <span class="nav-text">6.3 A more general-purpose API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-Generality-leads-to-better-information-hiding"><span class="nav-number">1.4.</span> <span class="nav-text">6.4 Generality leads to better information hiding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-Questions-to-ask-yourself"><span class="nav-number">1.5.</span> <span class="nav-text">6.5 Questions to ask yourself</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-Conclusion"><span class="nav-number">1.6.</span> <span class="nav-text">6.6 Conclusion</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jeremy Chou</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
       </div>
     </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/professional-software-design/10-6-general-purpose-modules-are-deeper.html" class="article-date">
-  <time datetime="2026-08-26T14:12:04.254Z" itemprop="datePublished">2026-08-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      6 General-Purpose Modules are Deeper
-    </h1>
-  
 
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner page posts-expand">
+
+
+    
+    
+    
+    <div class="post-block" lang="en"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">6 General-Purpose Modules are Deeper
+</h1>
+
+<div class="post-meta-container">
+</div>
+
+</header>
+
       
-        <h2 id="Chapter-6"><a href="#Chapter-6" class="headerlink" title="Chapter 6"></a>Chapter 6</h2><p>General-Purpose Modules are Deeper One of the most common decisions that you will face when designing a new module is whether to implement it in a general-purpose or special-purpose fashion. Some might argue that you should take a general-purpose approach, in which you implement a mechanism that can be used to address a broad range of problems, not just the ones that are important today. In this case, the new mechanism may find unanticipated uses in the future, thereby saving time. The general-purpose approach seems consistent with the investment mindset discussed in Chapter 3, where you spend a bit more time up front to save time later on.</p>
+      
+      
+      <div class="post-body">
+          <h2 id="Chapter-6"><a href="#Chapter-6" class="headerlink" title="Chapter 6"></a>Chapter 6</h2><p>General-Purpose Modules are Deeper One of the most common decisions that you will face when designing a new module is whether to implement it in a general-purpose or special-purpose fashion. Some might argue that you should take a general-purpose approach, in which you implement a mechanism that can be used to address a broad range of problems, not just the ones that are important today. In this case, the new mechanism may find unanticipated uses in the future, thereby saving time. The general-purpose approach seems consistent with the investment mindset discussed in Chapter 3, where you spend a bit more time up front to save time later on.</p>
 <p>On the other hand, we know that it’s hard to predict the future needs of a software system, so a general-purpose solution might include facilities that are never actually needed. Furthermore, if you implement something that is too general-purpose, it might not do a good job of solving the particular problem you have today. As a result, some might argue that it’s better to focus on today’s needs, building just what you know you need, and specializing it for the way you plan to use it today. If you take the special-purpose approach and discover additional uses later, you can always refactor it to make it general-purpose. The special-purpose approach seems consistent with an incremental approach to software development.</p>
 <h3 id="6-1-Make-classes-somewhat-general-purpose"><a href="#6-1-Make-classes-somewhat-general-purpose" class="headerlink" title="6.1 Make classes somewhat general-purpose"></a>6.1 Make classes somewhat general-purpose</h3><p>In my experience, the sweet spot is to implement new modules in a somewhat general-purpose fashion. The phrase “somewhat general-purpose” means that the module’s functionality should reflect your current needs, but its interface should not. Instead, the interface should be general enough to support multiple uses. The interface should be easy to use for today’s needs without being tied specifically to them. The word “somewhat” is important: don’t get carried away and build something so general-purpose that it is difficult to use for your current needs.</p>
 <p>The most important (and perhaps surprising) benefit of the general-purpose approach is that it results in simpler and deeper interfaces than a special-purpose approach. The general-purpose approach can also save you time in the future, if you reuse the class for other purposes. However, even if the module is only used for its original purpose, the general-purpose approach is still better because of its simplicity.</p>
@@ -111,125 +206,51 @@
 <h3 id="6-6-Conclusion"><a href="#6-6-Conclusion" class="headerlink" title="6.6 Conclusion"></a>6.6 Conclusion</h3><p>General-purpose interfaces have many advantages over special-purpose ones.</p>
 <p>They tend to be simpler, with fewer methods that are deeper. They also provide a cleaner separation between classes, whereas special-purpose interfaces tend to leak information between classes. Making your modules somewhat general- purpose is one of the best ways to reduce overall system complexity.</p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/professional-software-design/10-6-general-purpose-modules-are-deeper.html" data-id="cuidQyxE-HOICg78W4L9lbaRP" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-    
-  
-</article>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWS/" rel="tag">AWS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloud/" rel="tag">cloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/AWS/" style="font-size: 20px;">AWS</a> <a href="/tags/cloud/" style="font-size: 10px;">cloud</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 10px;">springboot</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/08/">August 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2026/08/26/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/18/Docker-Images/">Docker Images</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/14/Linux-Command-Collections/">Linux Command Collections</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/15/Gitlab-Jenkins-%E5%AE%89%E8%A3%85/">Gitlab &amp;&amp; Jenkins 安装</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/15/Centos-docker-docker-compose-install/">Centos docker &amp;&amp; docker-compose install</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2026 Jeremy Chou<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      
+      
+      
     </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+
+    
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
+</div>
+  </main>
 
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <footer class="footer">
+    <div class="footer-inner">
 
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jeremy Chou</span>
   </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
 </body>
 </html>

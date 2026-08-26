@@ -1,13 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
 
-  
-  <title>4 Modules Should Be Deep | Be a professional java backend</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Chapter 4Modules Should Be Deep One of the most important techniques for managing software complexity is to design systems so that developers only need to face a small fraction of the overall complexi">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Chapter 4Modules Should Be Deep One of the most important techniques for managing software complexity is to design systems so that developers only need to face a small fraction of the overall complexi">
 <meta property="og:type" content="website">
 <meta property="og:title" content="4 Modules Should Be Deep">
 <meta property="og:url" content="http://yoursite.com/professional-software-design/08-4-modules-should-be-deep.html">
@@ -18,77 +31,159 @@
 <meta property="article:modified_time" content="2026-08-26T14:12:04.253Z">
 <meta property="article:author" content="Jeremy Chou">
 <meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Be a professional java backend" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
 
-<meta name="generator" content="Hexo 8.1.2"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Be a professional java backend</a>
-      </h1>
-      
+<link rel="canonical" href="http://yoursite.com/professional-software-design/08-4-modules-should-be-deep">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":true,"permalink":"http://yoursite.com/professional-software-design/08-4-modules-should-be-deep.html","path":"professional-software-design/08-4-modules-should-be-deep.html","title":"4 Modules Should Be Deep"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>4 Modules Should Be Deep | Be a professional java backend
+</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Be a professional java backend</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">Tags</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section">About</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
         
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-4"><span class="nav-number">1.</span> <span class="nav-text">Chapter 4</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Modular-design"><span class="nav-number">1.1.</span> <span class="nav-text">4.1 Modular design</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-What%E2%80%99s-in-an-interface"><span class="nav-number">1.2.</span> <span class="nav-text">4.2 What’s in an interface?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Abstractions"><span class="nav-number">1.3.</span> <span class="nav-text">4.3 Abstractions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-Deep-modules"><span class="nav-number">1.4.</span> <span class="nav-text">4.4 Deep modules</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-Shallow-modules"><span class="nav-number">1.5.</span> <span class="nav-text">4.5 Shallow modules</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-Classitis"><span class="nav-number">1.6.</span> <span class="nav-text">4.6 Classitis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7-Examples-Java-and-Unix-I-O"><span class="nav-number">1.7.</span> <span class="nav-text">4.7 Examples: Java and Unix I&#x2F;O</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8-Conclusion"><span class="nav-number">1.8.</span> <span class="nav-text">4.8 Conclusion</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jeremy Chou</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
       </div>
     </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/professional-software-design/08-4-modules-should-be-deep.html" class="article-date">
-  <time datetime="2026-08-26T14:12:04.253Z" itemprop="datePublished">2026-08-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      4 Modules Should Be Deep
-    </h1>
-  
 
-      </header>
     
-    <div class="article-entry" itemprop="articleBody">
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner page posts-expand">
+
+
+    
+    
+    
+    <div class="post-block" lang="en"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">4 Modules Should Be Deep
+</h1>
+
+<div class="post-meta-container">
+</div>
+
+</header>
+
       
-        <h2 id="Chapter-4"><a href="#Chapter-4" class="headerlink" title="Chapter 4"></a>Chapter 4</h2><p>Modules Should Be Deep One of the most important techniques for managing software complexity is to design systems so that developers only need to face a small fraction of the overall complexity at any given time. This approach is called modular design, and this chapter presents its basic principles.</p>
+      
+      
+      <div class="post-body">
+          <h2 id="Chapter-4"><a href="#Chapter-4" class="headerlink" title="Chapter 4"></a>Chapter 4</h2><p>Modules Should Be Deep One of the most important techniques for managing software complexity is to design systems so that developers only need to face a small fraction of the overall complexity at any given time. This approach is called modular design, and this chapter presents its basic principles.</p>
 <h3 id="4-1-Modular-design"><a href="#4-1-Modular-design" class="headerlink" title="4.1 Modular design"></a>4.1 Modular design</h3><p>In modular design, a software system is decomposed into a collection of modules that are relatively independent. Modules can take many forms, such as classes, subsystems, or services. In an ideal world, each module would be completely independent of the others: a developer could work in any of the modules without knowing anything about any of the other modules. In this world, the complexity of a system would be the complexity of its worst module.</p>
 <p>Unfortunately, this ideal is not achievable. Modules must work together by calling each others’s functions or methods. As a result, modules must know something about each other. There will be dependencies between the modules: if one module changes, other modules may need to change to match. For example, the arguments for a method create a dependency between the method and any code that invokes the method. If the required arguments change, all invocations of the method must be modified to conform to the new signature. Dependencies can take many other forms, and they can be quite subtle. The goal of modular design is to minimize the dependencies between modules.</p>
 <p>In order to manage dependencies, we think of each module in two parts: an interface and an implementation. The interface consists of everything that a developer working in a different module must know in order to use the given module. Typically, the interface describes what the module does but not how it does it. The implementation consists of the code that carries out the promises made by the interface. A developer working in a particular module must understand the interface and implementation of that module, plus the interfaces of any other modules invoked by the given module. A developer should not need to understand the implementations of modules other than the one he or she is working in.</p>
@@ -125,125 +220,51 @@
 <p>In contrast, the designers of the Unix system calls made the common case simple. For example, they recognized that sequential I&#x2F;O is most common, so they made that the default behavior. Random access is still relatively easy to do, using the lseek system call, but a developer doing only sequential access need not be aware of that mechanism. If an interface has many features, but most developers only need to be aware of a few of them, the effective complexity of that interface is just the complexity of the commonly used features.</p>
 <h3 id="4-8-Conclusion"><a href="#4-8-Conclusion" class="headerlink" title="4.8 Conclusion"></a>4.8 Conclusion</h3><p>By separating the interface of a module from its implementation, we can hide the complexity of the implementation from the rest of the system. Users of a module need only understand the abstraction provided by its interface. The most important issue in designing classes and other modules is to make them deep, so that they have simple interfaces for the common use cases, yet still provide significant functionality. This maximizes the amount of complexity that is concealed. 1There exist languages, mostly in the research community, where the overall behavior of a method or function can be described formally using a specification language. The specification can be checked automatically to ensure that it matches the implementation. An interesting question is whether such a formal specification could replace the informal parts of an interface. My current opinion is that an interface described in English is likely to be more intuitive and understandable for developers than one written in a formal specification language.</p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/professional-software-design/08-4-modules-should-be-deep.html" data-id="cuidvrvz58D9z3ApPYH5aOGsy" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-    
-  
-</article>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWS/" rel="tag">AWS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloud/" rel="tag">cloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/AWS/" style="font-size: 20px;">AWS</a> <a href="/tags/cloud/" style="font-size: 10px;">cloud</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 10px;">springboot</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/08/">August 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2026/08/26/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/18/Docker-Images/">Docker Images</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/14/Linux-Command-Collections/">Linux Command Collections</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/15/Gitlab-Jenkins-%E5%AE%89%E8%A3%85/">Gitlab &amp;&amp; Jenkins 安装</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/15/Centos-docker-docker-compose-install/">Centos docker &amp;&amp; docker-compose install</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2026 Jeremy Chou<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      
+      
+      
     </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+
+    
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
+</div>
+  </main>
 
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <footer class="footer">
+    <div class="footer-inner">
 
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jeremy Chou</span>
   </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
 </body>
 </html>
