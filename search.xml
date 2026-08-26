@@ -31,6 +31,20 @@
 ]]></content>
   </entry>
   <entry>
+    <title>Docker Images</title>
+    <url>/2020/06/18/Docker-Images/</url>
+    <content><![CDATA[<ul>
+<li><p>nacos</p>
+  <figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">docker run --env <span class="variable constant_">MODE</span>=standalone --name nacos -d -p <span class="number">8848</span>:<span class="number">8848</span> nacos/nacos-server</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>mysql</p>
+  <figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">docker run -p <span class="number">3306</span>:<span class="number">3306</span> --name mysql -v $PWD/<span class="attr">conf</span>:<span class="regexp">/etc/my</span>sql/conf.<span class="property">d</span> -v $PWD/<span class="attr">logs</span>:<span class="regexp">/logs -v $PWD/</span><span class="attr">data</span>:<span class="regexp">/var/</span>lib/mysql -e <span class="variable constant_">MYSQL_ROOT_PASSWORD</span>=<span class="number">123456</span> -d <span class="attr">mysql</span>:<span class="number">5.6</span></span><br></pre></td></tr></table></figure>
+</li>
+<li></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
     <title>ECS-FARGATE-DEPLOYMENT</title>
     <url>/2020/05/12/ECS-FARGATE-DEPLOYMENT/</url>
     <content><![CDATA[<h2 id="create-ecs-cluster"><a href="#create-ecs-cluster" class="headerlink" title="create ecs cluster"></a>create ecs cluster</h2>   <figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="code"><pre><span class="line">ecs-cli configure -c $&#123;clustername&#125; -r us-east-1  --default-launch-type FARGATE</span><br><span class="line">ecs-cli up -e</span><br></pre></td></tr></table></figure>
@@ -78,15 +92,15 @@
 ]]></content>
   </entry>
   <entry>
-    <title>Linux Command Collections</title>
-    <url>/2020/06/14/Linux-Command-Collections/</url>
-    <content><![CDATA[<h3 id="查看cpu信息"><a href="#查看cpu信息" class="headerlink" title="查看cpu信息"></a>查看cpu信息</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">总核数 = 物理CPU个数 X 每颗物理CPU的核数</span> </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">总逻辑CPU数 = 物理CPU个数 X 每颗物理CPU的核数 X 超线程数</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看物理CPU个数</span></span><br><span class="line">cat /proc/cpuinfo| grep &quot;physical id&quot;| sort| uniq| wc -l</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看每个物理CPU中core的个数(即核数)</span></span><br><span class="line">cat /proc/cpuinfo| grep &quot;cpu cores&quot;| uniq</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看逻辑CPU的个数</span></span><br><span class="line">cat /proc/cpuinfo| grep &quot;processor&quot;| wc -l</span><br></pre></td></tr></table></figure>
-]]></content>
-  </entry>
-  <entry>
     <title>Jenkins File</title>
     <url>/2020/05/13/Jenkins-File/</url>
     <content><![CDATA[<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="code"><pre><span class="line">image_tag = &quot;default&quot;  //定一个全局变量，存储Docker镜像的tag（版本）</span><br><span class="line">pipeline &#123;</span><br><span class="line">    agent any</span><br><span class="line">    environment &#123;</span><br><span class="line">        GIT_REPO = &quot;$&#123;env.gitlabSourceRepoName&#125;&quot;  //从Jenkins Gitlab插件中获取Git项目的名称</span><br><span class="line">        GIT_BRANCH = &quot;$&#123;env.gitlabTargetBranch&#125;&quot;  //项目的分支</span><br><span class="line">        GIT_TAG = sh(returnStdout: true,script: &#x27;git describe --tags --always&#x27;).trim()  //commit id或tag名称</span><br><span class="line">        DOCKER_REGISTER_CREDS = credentials(&#x27;aliyun-docker-repo-creds&#x27;) //docker registry凭证</span><br><span class="line">        KUBE_CONFIG_LOCAL = credentials(&#x27;local-k8s-kube-config&#x27;)  //开发测试环境的kube凭证</span><br><span class="line">        KUBE_CONFIG_PROD = &quot;&quot; //credentials(&#x27;prod-k8s-kube-config&#x27;) //生产环境的kube凭证</span><br><span class="line"></span><br><span class="line">        DOCKER_REGISTRY = &quot;registry.cn-hangzhou.aliyuncs.com&quot; //Docker仓库地址</span><br><span class="line">        DOCKER_NAMESPACE = &quot;your-namespace&quot;  //命名空间</span><br><span class="line">        DOCKER_IMAGE = &quot;$&#123;DOCKER_REGISTRY&#125;/$&#123;DOCKER_NAMESPACE&#125;/$&#123;GIT_REPO&#125;&quot; //Docker镜像地址</span><br><span class="line"></span><br><span class="line">        INGRESS_HOST_DEV = &quot;dev.your-site.com&quot;    //开发环境的域名</span><br><span class="line">        INGRESS_HOST_TEST = &quot;test.your-site.com&quot;  //测试环境的域名</span><br><span class="line">        INGRESS_HOST_PROD = &quot;prod.your-site.com&quot;  //生产环境的域名</span><br><span class="line">    &#125;</span><br><span class="line">    parameters &#123;</span><br><span class="line">        string(name: &#x27;ingress_path&#x27;, defaultValue: &#x27;/your-path&#x27;, description: &#x27;服务上下文路径&#x27;)</span><br><span class="line">        string(name: &#x27;replica_count&#x27;, defaultValue: &#x27;1&#x27;, description: &#x27;容器副本数量&#x27;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(&#x27;Code Analyze&#x27;) &#123;</span><br><span class="line">            agent any</span><br><span class="line">            steps &#123;</span><br><span class="line">               echo &quot;1. 代码静态检查&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#x27;Maven Build&#x27;) &#123;</span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123;</span><br><span class="line">                    image &#x27;maven:3-jdk-8-alpine&#x27;</span><br><span class="line">                    args &#x27;-v $HOME/.m2:/root/.m2&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;2. 代码编译打包&quot;</span><br><span class="line">                sh &#x27;mvn clean package -Dfile.encoding=UTF-8 -DskipTests=true&#x27;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#x27;Docker Build&#x27;) &#123;</span><br><span class="line">            agent any</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;3. 构建Docker镜像&quot;</span><br><span class="line">                echo &quot;镜像地址： $&#123;DOCKER_IMAGE&#125;&quot;</span><br><span class="line">                //登录Docker仓库</span><br><span class="line">                sh &quot;sudo docker login -u $&#123;DOCKER_REGISTER_CREDS_USR&#125; -p $&#123;DOCKER_REGISTER_CREDS_PSW&#125; $&#123;DOCKER_REGISTRY&#125;&quot;</span><br><span class="line">                script &#123;</span><br><span class="line">                    def profile = &quot;dev&quot;</span><br><span class="line">                    if (env.gitlabTargetBranch == &quot;develop&quot;) &#123;</span><br><span class="line">                        image_tag = &quot;dev.&quot; + env.GIT_TAG</span><br><span class="line">                    &#125; else if (env.gitlabTargetBranch == &quot;pre-release&quot;) &#123;</span><br><span class="line">                        image_tag = &quot;test.&quot; + env.GIT_TAG</span><br><span class="line">                        profile = &quot;test&quot;</span><br><span class="line">                    &#125; else if (env.gitlabTargetBranch == &quot;master&quot;)&#123;</span><br><span class="line">                        // master分支则直接使用Tag</span><br><span class="line">                        image_tag = env.GIT_TAG</span><br><span class="line">                        profile = &quot;prod&quot;</span><br><span class="line">                    &#125;</span><br><span class="line">                    //通过--build-arg将profile进行设置，以区分不同环境进行镜像构建</span><br><span class="line">                    sh &quot;docker build  --build-arg profile=$&#123;profile&#125; -t $&#123;DOCKER_IMAGE&#125;:$&#123;image_tag&#125; .&quot;</span><br><span class="line">                    sh &quot;sudo docker push $&#123;DOCKER_IMAGE&#125;:$&#123;image_tag&#125;&quot;</span><br><span class="line">                    sh &quot;docker rmi $&#123;DOCKER_IMAGE&#125;:$&#123;image_tag&#125;&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(&#x27;Helm Deploy&#x27;) &#123;</span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123;</span><br><span class="line">                    image &#x27;lwolf/helm-kubectl-docker&#x27;</span><br><span class="line">                    args &#x27;-u root:root&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;4. 部署到K8s&quot;</span><br><span class="line">                sh &quot;mkdir -p /root/.kube&quot;</span><br><span class="line">                script &#123;</span><br><span class="line">                    def kube_config = env.KUBE_CONFIG_LOCAL</span><br><span class="line">                    def ingress_host = env.INGRESS_HOST_DEV</span><br><span class="line">                    if (env.gitlabTargetBranch == &quot;pre-release&quot;) &#123;</span><br><span class="line">                        ingress_host = env.INGRESS_HOST_TEST</span><br><span class="line">                    &#125; else if (env.gitlabTargetBranch == &quot;master&quot;)&#123;</span><br><span class="line">                        ingress_host = env.INGRESS_HOST_PROD</span><br><span class="line">                        kube_config = env.KUBE_CONFIG_PROD</span><br><span class="line">                    &#125;</span><br><span class="line">                    sh &quot;echo $&#123;kube_config&#125; | base64 -d &gt; /root/.kube/config&quot;</span><br><span class="line">                    //根据不同环境将服务部署到不同的namespace下，这里使用分支名称</span><br><span class="line">                    sh &quot;helm upgrade -i --namespace=$&#123;env.gitlabTargetBranch&#125; --set replicaCount=$&#123;params.replica_count&#125; --set image.repository=$&#123;DOCKER_IMAGE&#125; --set image.tag=$&#123;image_tag&#125; --set nameOverride=$&#123;GIT_REPO&#125; --set ingress.hosts[0].host=$&#123;ingress_host&#125; --set ingress.hosts[0].paths=&#123;$&#123;params.ingress_path&#125;&#125; $&#123;GIT_REPO&#125; ./helm/&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
+    <title>Linux Command Collections</title>
+    <url>/2020/06/14/Linux-Command-Collections/</url>
+    <content><![CDATA[<h3 id="查看cpu信息"><a href="#查看cpu信息" class="headerlink" title="查看cpu信息"></a>查看cpu信息</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">总核数 = 物理CPU个数 X 每颗物理CPU的核数</span> </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">总逻辑CPU数 = 物理CPU个数 X 每颗物理CPU的核数 X 超线程数</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看物理CPU个数</span></span><br><span class="line">cat /proc/cpuinfo| grep &quot;physical id&quot;| sort| uniq| wc -l</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看每个物理CPU中core的个数(即核数)</span></span><br><span class="line">cat /proc/cpuinfo| grep &quot;cpu cores&quot;| uniq</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看逻辑CPU的个数</span></span><br><span class="line">cat /proc/cpuinfo| grep &quot;processor&quot;| wc -l</span><br></pre></td></tr></table></figure>
 ]]></content>
   </entry>
   <entry>
@@ -111,6 +125,47 @@
       <tags>
         <tag>springboot</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>SpringCloud学习资源</title>
+    <url>/2020/03/17/SpringCloud%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/</url>
+    <content><![CDATA[<h3 id="Blogs"><a href="#Blogs" class="headerlink" title="Blogs"></a>Blogs</h3><ul>
+<li><a href="http://www.springcloud.wiki/">Spring Cloud微服务教程汇总</a></li>
+<li><a href="https://qingmu.io/">青木のJava小屋</a> spring cloud on K8S</li>
+<li><a href="https://mrbird.cc/tags/Spring-Cloud/">Mr Bird</a> spring cloud 系列</li>
+<li><a href="https://www.funtl.com/zh/guide/Spring-Cloud-Alibaba.html">千锋教育-李卫民</a> spring cloud Alibaba 教程</li>
+<li><a href="https://bugstack.cn/">BugStack-虫洞栈</a></li>
+</ul>
+<h3 id="github"><a href="#github" class="headerlink" title="github"></a>github</h3><ul>
+<li><a href="https://github.com/ityouknow/awesome-spring-cloud">awesome-spring-cloud</a> spring cloud 资源</li>
+</ul>
+<h2 id="Video"><a href="#Video" class="headerlink" title="Video"></a>Video</h2><ul>
+<li><a href="https://www.bilibili.com/video/av22613028">尚硅谷周阳SpringCloud 第一季</a></li>
+<li><a href="https://www.bilibili.com/video/av94620638">尚硅谷周阳springCloud 第二季</a></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>spring</tag>
+        <tag>cloud</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2026/08/26/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
   </entry>
   <entry>
     <title>NB-blogs</title>
@@ -727,38 +782,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>Docker Images</title>
-    <url>/2020/06/18/Docker-Images/</url>
-    <content><![CDATA[<ul>
-<li><p>nacos</p>
-  <figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">docker run --env <span class="variable constant_">MODE</span>=standalone --name nacos -d -p <span class="number">8848</span>:<span class="number">8848</span> nacos/nacos-server</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>mysql</p>
-  <figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">docker run -p <span class="number">3306</span>:<span class="number">3306</span> --name mysql -v $PWD/<span class="attr">conf</span>:<span class="regexp">/etc/my</span>sql/conf.<span class="property">d</span> -v $PWD/<span class="attr">logs</span>:<span class="regexp">/logs -v $PWD/</span><span class="attr">data</span>:<span class="regexp">/var/</span>lib/mysql -e <span class="variable constant_">MYSQL_ROOT_PASSWORD</span>=<span class="number">123456</span> -d <span class="attr">mysql</span>:<span class="number">5.6</span></span><br></pre></td></tr></table></figure>
-</li>
-<li></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2026/08/26/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>源码解读</title>
     <url>/2020/03/17/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/</url>
     <content><![CDATA[<h3 id="JDK"><a href="#JDK" class="headerlink" title="JDK"></a>JDK</h3><ul>
@@ -795,28 +818,5 @@
 <li><a href="http://svip.iocoder.cn/index/">芋道源码</a> SpringMVC, Netty, Mybatis, Redis</li>
 </ul>
 ]]></content>
-  </entry>
-  <entry>
-    <title>SpringCloud学习资源</title>
-    <url>/2020/03/17/SpringCloud%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/</url>
-    <content><![CDATA[<h3 id="Blogs"><a href="#Blogs" class="headerlink" title="Blogs"></a>Blogs</h3><ul>
-<li><a href="http://www.springcloud.wiki/">Spring Cloud微服务教程汇总</a></li>
-<li><a href="https://qingmu.io/">青木のJava小屋</a> spring cloud on K8S</li>
-<li><a href="https://mrbird.cc/tags/Spring-Cloud/">Mr Bird</a> spring cloud 系列</li>
-<li><a href="https://www.funtl.com/zh/guide/Spring-Cloud-Alibaba.html">千锋教育-李卫民</a> spring cloud Alibaba 教程</li>
-<li><a href="https://bugstack.cn/">BugStack-虫洞栈</a></li>
-</ul>
-<h3 id="github"><a href="#github" class="headerlink" title="github"></a>github</h3><ul>
-<li><a href="https://github.com/ityouknow/awesome-spring-cloud">awesome-spring-cloud</a> spring cloud 资源</li>
-</ul>
-<h2 id="Video"><a href="#Video" class="headerlink" title="Video"></a>Video</h2><ul>
-<li><a href="https://www.bilibili.com/video/av22613028">尚硅谷周阳SpringCloud 第一季</a></li>
-<li><a href="https://www.bilibili.com/video/av94620638">尚硅谷周阳springCloud 第二季</a></li>
-</ul>
-]]></content>
-      <tags>
-        <tag>spring</tag>
-        <tag>cloud</tag>
-      </tags>
   </entry>
 </search>
